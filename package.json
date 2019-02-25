@@ -1,5 +1,5 @@
 {
-  "name": "react-d3-graph",
+  "name": "d3-graph-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
