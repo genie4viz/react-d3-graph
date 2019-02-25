@@ -14,7 +14,7 @@ class StackChart extends Component {
     drawChart() {
         const {data, width, height} = this.props;
         
-        let margin = {top: 80, right: 20, bottom: 40, left: 60};
+        let margin = {top: 80, right: 20, bottom: 100, left: 60};
         
         let x = d3.scaleBand().range([0, width]).padding([0.59]);
         let y = d3.scaleLinear().range([height, 0]);

@@ -12,7 +12,7 @@ class App extends Component {
         {label:"C?", "Satisfied":40, "Not Satisfied":40}   
     ],
     width: 500,
-    height: 500,
+    height: 400,
     id: "root"
   };
   render() {
