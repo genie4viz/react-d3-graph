@@ -6,8 +6,12 @@ import './App.css';
 
 class App extends Component {
   state = {
-    data: [12, 5, 6, 6, 9, 10],
-    width: 700,
+    data: [
+        {label:"A?", "Satisfied":30, "Not Satisfied":38},
+        {label:"B?", "Satisfied":45, "Not Satisfied":43},
+        {label:"C?", "Satisfied":40, "Not Satisfied":40}   
+    ],
+    width: 500,
     height: 500,
     id: "root"
   };
@@ -16,8 +20,7 @@ class App extends Component {
       <div className="App">
         <Section>        
           <Box>
-            <StackChart data={this.state.data} width={this.state.width} height={this.state.height} />
-            <Button color="primary">My Bulma button</Button>
+            <StackChart data={this.state.data} width={this.state.width} height={this.state.height} />            
           </Box>    
         </Section>
       </div>
