@@ -14,7 +14,7 @@ class App extends Component {
           {label:"B?", "Satisfied":45, "Not Satisfied":43},
           {label:"C?", "Satisfied":40, "Not Satisfied":40}   
       ],
-      data_guage: {branche: 25, market: 45, current: 70, color: "#df072c"},
+      data_guage: {branche: 25, market: 45, current: 70, color: "#df072c", description:"PE-ratio"},
       width: 500,
       height: 400
     };    
@@ -27,7 +27,7 @@ class App extends Component {
       {label:"AA", "Satisfied":40, "Not Satisfied":40}   
     ];
     let new_data_guage =
-      {branche: 25, market: 45, current: 10, color: "#df072c"};
+      {branche: 55, market: 85, current: 10, color: "#64ab30", description:"ROIC"};
     
     this.setState({
       data_stack: new_data_stack,
