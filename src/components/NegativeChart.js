@@ -14,138 +14,9 @@ class NegativeChart extends Component {
     componentDidUpdate() {
         this.drawChart();
     }
-    drawChart() {
-        var dataset = [{
-                "year": "2015",
-                "values": [{
-                        "label": "OA",
-                        "value": 42                        
-                    },
-                    {
-                        "label": "IA",
-                        "value": 23                        
-                    },
-                    {
-                        "label": "FA",
-                        "value": -42                        
-                    },
-                    {                        
-                        "label": "CC",
-                        "value": -23
-                    },
-                    {
-                        "label": "EBITDA",
-                        "value": 37
-                    }
-                ]
-            },
-            {
-                "year": "2016",
-                "values": [{
-                        "label": "OA",
-                        "value": 42                        
-                    },
-                    {
-                        "label": "IA",
-                        "value": 23                        
-                    },
-                    {
-                        "label": "FA",
-                        "value": -42                        
-                    },
-                    {                        
-                        "label": "CC",
-                        "value": -23
-                    },
-                    {
-                        "label": "EBITDA",
-                        "value": 57
-                    }
-                ]
-            },
-            {
-                "year": "2017",
-                "values": [{
-                        "label": "OA",
-                        "value": 42                        
-                    },
-                    {
-                        "label": "IA",
-                        "value": 23                        
-                    },
-                    {
-                        "label": "FA",
-                        "value": -42                        
-                    },
-                    {                        
-                        "label": "CC",
-                        "value": -23
-                    },
-                    {
-                        "label": "EBITDA",
-                        "value": 47
-                    }
-                ]
-            },
-            {
-                "year": "2018",
-                "values": [{
-                        "label": "OA",
-                        "value": 42                        
-                    },
-                    {
-                        "label": "IA",
-                        "value": 23                        
-                    },
-                    {
-                        "label": "FA",
-                        "value": -42                        
-                    },
-                    {                        
-                        "label": "CC",
-                        "value": -23
-                    },
-                    {
-                        "label": "EBITDA",
-                        "value": 77
-                    }
-                ]
-            },
-            {
-                "year": "2019",
-                "values": [{
-                        "label": "OA",
-                        "value": 42                        
-                    },
-                    {
-                        "label": "IA",
-                        "value": 23                        
-                    },
-                    {
-                        "label": "FA",
-                        "value": -42                        
-                    },
-                    {                        
-                        "label": "CC",
-                        "value": -23
-                    },
-                    {
-                        "label": "EBITDA",
-                        "value": 27
-                    }
-                ]
-            }
-        ];
-        const {
-            width,
-            height
-        } = this.props;
-        var margin = {
-            top: 20,
-            right: 20,
-            bottom: 30,
-            left: 50
-        };           
+    drawChart() {        
+        const {width, height, data} = this.props;
+        var margin = {top: 20, right: 20, bottom: 30, left: 50};           
 
         var x = d3.scaleLinear()
             .range([0, width]);
@@ -162,14 +33,15 @@ class NegativeChart extends Component {
             .range(["#bdbbbc", "#63ae2d", "#929292", "#000700"]);
         
         var node = this.node;
+        d3.select(node).selectAll("*").remove();
         var svg = d3.select(node)
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var yearsNames = dataset.map(d => d.year);
-        var labelNames = dataset[0].values.map(d => d.label);
+        var yearsNames = data.map(d => d.year);
+        var labelNames = data[0].values.map(d => d.label);
         
         //remove EBITDA
         labelNames = labelNames.slice(0, 4);
@@ -200,7 +72,7 @@ class NegativeChart extends Component {
             .style('font-weight', 'bold');
 
         var slice = svg.selectAll(".slice")
-            .data(dataset)
+            .data(data)
             .enter().append("g")
             .attr("class", "g")
             .attr("transform", d => "translate(0, " + y0(d.year) + ")");            
@@ -237,7 +109,7 @@ class NegativeChart extends Component {
 
         //Legend
         // var legend = svg.selectAll(".legend")
-        //     .data(dataset[0].values.map(function (d) {
+        //     .data(data[0].values.map(function (d) {
         //         return d.label;
         //     }).reverse())
         //     .enter().append("g")

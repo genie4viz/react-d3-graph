@@ -17,11 +17,26 @@ class App extends Component {
       ],
       data_guage: {branche: 25, market: 45, current: 70, color: "#df072c", description:"PE-ratio"},
       data_negative:[
-        {year: "2015", EBITA:27, OA: 42, IA: 23, FA: -42, CC: -23},
-        {year: "2016", EBITA:56, OA: 42, IA: 23, FA: -42, CC: -23},
-        {year: "2017", EBITA:27, OA: 42, IA: 23, FA: -42, CC: -23},
-        {year: "2018", EBITA:56, OA: 42, IA: 23, FA: -42, CC: -23},
-        {year: "2019", EBITA:27, OA: 42, IA: 23, FA: -42, CC: -23}
+        {
+          "year": "2015", 
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+        },
+        {
+          "year": "2016", 
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+        },
+        {
+          "year": "2017", 
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+        },
+        {
+          "year": "2018", 
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+        },
+        {
+          "year": "2019", 
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+        },
       ],
       width: 500,
       height: 400
@@ -37,11 +52,26 @@ class App extends Component {
     let new_data_guage =
       {branche: 55, market: 85, current: 10, color: "#64ab30", description:"ROIC"};
     let new_data_negative = [
-      {year: "2015", EBITA:27, OA: 42, IA: 23, FA: -42, CC: -23},
-      {year: "2016", EBITA:56, OA: 42, IA: 23, FA: -42, CC: -23},
-      {year: "2017", EBITA:27, OA: 42, IA: 23, FA: -42, CC: -23},
-      {year: "2018", EBITA:56, OA: 42, IA: 23, FA: -42, CC: -23},
-      {year: "2019", EBITA:27, OA: 42, IA: 23, FA: -42, CC: -23}
+      {
+        "year": "2015", 
+        "values": [{"label": "OA", "value": 32},{"label": "IA", "value": 63},{"label": "FA", "value": -82},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+      },
+      {
+        "year": "2016", 
+        "values": [{"label": "OA", "value": 12},{"label": "IA", "value": 23},{"label": "FA", "value": -49},{"label": "CC", "value": -33},{"label": "EBITDA","value": 47}]
+      },
+      {
+        "year": "2017", 
+        "values": [{"label": "OA", "value": 52},{"label": "IA", "value": 13},{"label": "FA", "value": -12},{"label": "CC", "value": -63},{"label": "EBITDA","value": 17}]
+      },
+      {
+        "year": "2018", 
+        "values": [{"label": "OA", "value": 82},{"label": "IA", "value": 28},{"label": "FA", "value": -52},{"label": "CC", "value": -93},{"label": "EBITDA","value": 77}]
+      },
+      {
+        "year": "2019", 
+        "values": [{"label": "OA", "value": 32},{"label": "IA", "value": 67},{"label": "FA", "value": -32},{"label": "CC", "value": -13},{"label": "EBITDA","value": 57}]
+      },
     ];
     this.setState({
       data_stack: new_data_stack,
