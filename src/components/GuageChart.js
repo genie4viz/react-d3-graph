@@ -111,10 +111,10 @@ class GuageChart extends Component {
             .style("text-anchor", d => d < 50 ? "end" : "start")
             .attr('fill','#929292')
             .text(function(d){
-                if(d == data.branche){
+                if(d === data.branche){
                     return 'Branche';
                 }
-                if(d == data.market){
+                if(d === data.market){
                     return 'Market';
                 }
                 return '';
@@ -129,10 +129,10 @@ class GuageChart extends Component {
             .enter().append('path')
             .style('stroke','#929292')
             .style('stroke-width', function(d){
-                if(d == data.branche){
+                if(d === data.branche){
                     return 6;
                 }
-                if(d == data.market){
+                if(d === data.market){
                     return 6;
                 }
                 return 0;
