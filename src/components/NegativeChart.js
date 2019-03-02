@@ -168,12 +168,8 @@ class NegativeChart extends Component {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var yearsNames = dataset.map(function (d) {
-            return d.year;
-        });
-        var labelNames = dataset[0].values.map(function (d) {            
-            return d.label;
-        });
+        var yearsNames = dataset.map(d => d.year);
+        var labelNames = dataset[0].values.map(d => d.label);
         
         //remove EBITDA
         labelNames = labelNames.slice(0, 4);
@@ -207,41 +203,19 @@ class NegativeChart extends Component {
             .data(dataset)
             .enter().append("g")
             .attr("class", "g")
-            .attr("transform", function (d) {
-                return "translate(0, " + y0(d.year) + ")";
-            });
+            .attr("transform", d => "translate(0, " + y0(d.year) + ")");            
  
         slice.selectAll("rect")
             .data(d => d.values)
             .enter().append("rect")
             .attr("rx", 5)
             .attr("ry", 5)
-            .attr("x", function(d){                
-                if(d.value > 0)
-                    return x(0);
-                else
-                    return x(d.value);
-            })
-            .attr("width", function (d) {                
-                if(d.value > 0)
-                    return x(d.value - 100);
-                else
-                    return x(0) - x(d.value);
-            })
+            .attr("x", d => d.value > 0 ? x(0) : x(d.value))
+            .attr("width", d => d.value > 0 ? x(d.value - 100) : x(0) - x(d.value))
             .attr("height", y1.bandwidth())
-            .attr("y", function (d) {
-                return y1(d.label);
-            })
-            .style("fill", function (d) {
-                return color(d.label);                
-            })
-            .style("opacity", function(d){
-                if(d.label === "EBITDA"){
-                    return 0;
-                }else{
-                    return 1;
-                }
-            })
+            .attr("y", d => y1(d.label))
+            .style("fill", d => color(d.label))
+            .style("opacity", d => d.label === "EBITDA" ? 0 : 1);
         // //add percent
         slice.selectAll("text")
             .data(d => d.values)
@@ -256,18 +230,10 @@ class NegativeChart extends Component {
         slice.selectAll("path")
             .data(d => d.values)
             .enter().append("path")
-            .attr("d", function(d){                
-                return "M" + x(d.value) + " -1 L" + x(d.value) + " " + (y1.bandwidth() + 2) +" Z";
-            })
+            .attr("d", d => "M" + x(d.value) + " -1 L" + x(d.value) + " " + (y1.bandwidth() + 2) +" Z")
             .style("stroke","#de0730")
             .style("stroke-width", 3)
-            .style("opacity", function(d){
-                if(d.label === "EBITDA"){
-                    return 1;
-                }else{
-                    return 0;
-                }
-            });
+            .style("opacity", d => d.label === "EBITDA" ? 1 : 0);
 
         //Legend
         // var legend = svg.selectAll(".legend")
