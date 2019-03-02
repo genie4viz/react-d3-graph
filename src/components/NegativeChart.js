@@ -18,120 +18,120 @@ class NegativeChart extends Component {
         var dataset = [{
                 "year": "2015",
                 "values": [{
-                        "value": 0,
-                        "rate": "Not at all"
+                        "label": "OA",
+                        "value": 42                        
                     },
                     {
-                        "value": 4,
-                        "rate": "Not very much"
+                        "label": "IA",
+                        "value": 23                        
                     },
                     {
-                        "value": 12,
-                        "rate": "Medium"
+                        "label": "FA",
+                        "value": 42                        
+                    },
+                    {                        
+                        "label": "CC",
+                        "value": 23
                     },
                     {
-                        "value": 6,
-                        "rate": "Very much"
-                    },
-                    {
-                        "value": 0,
-                        "rate": "Tremendously"
+                        "label": "EBITDA",
+                        "value": 37
                     }
                 ]
             },
             {
                 "year": "2016",
                 "values": [{
-                        "value": 1,
-                        "rate": "Not at all"
+                        "label": "OA",
+                        "value": 42                        
                     },
                     {
-                        "value": 21,
-                        "rate": "Not very much"
+                        "label": "IA",
+                        "value": 23                        
                     },
                     {
-                        "value": 13,
-                        "rate": "Medium"
+                        "label": "FA",
+                        "value": 42                        
+                    },
+                    {                        
+                        "label": "CC",
+                        "value": 23
                     },
                     {
-                        "value": 18,
-                        "rate": "Very much"
-                    },
-                    {
-                        "value": 6,
-                        "rate": "Tremendously"
+                        "label": "EBITDA",
+                        "value": 57
                     }
                 ]
             },
             {
                 "year": "2017",
                 "values": [{
-                        "value": 3,
-                        "rate": "Not at all"
+                        "label": "OA",
+                        "value": 42                        
                     },
                     {
-                        "value": 22,
-                        "rate": "Not very much"
+                        "label": "IA",
+                        "value": 23                        
                     },
                     {
-                        "value": 6,
-                        "rate": "Medium"
+                        "label": "FA",
+                        "value": 42                        
+                    },
+                    {                        
+                        "label": "CC",
+                        "value": 23
                     },
                     {
-                        "value": 15,
-                        "rate": "Very much"
-                    },
-                    {
-                        "value": 3,
-                        "rate": "Tremendously"
+                        "label": "EBITDA",
+                        "value": 47
                     }
                 ]
             },
             {
                 "year": "2018",
                 "values": [{
-                        "value": 12,
-                        "rate": "Not at all"
+                        "label": "OA",
+                        "value": 42                        
                     },
                     {
-                        "value": 7,
-                        "rate": "Not very much"
+                        "label": "IA",
+                        "value": 23                        
                     },
                     {
-                        "value": 18,
-                        "rate": "Medium"
+                        "label": "FA",
+                        "value": 42                        
+                    },
+                    {                        
+                        "label": "CC",
+                        "value": 23
                     },
                     {
-                        "value": 13,
-                        "rate": "Very much"
-                    },
-                    {
-                        "value": 6,
-                        "rate": "Tremendously"
+                        "label": "EBITDA",
+                        "value": 77
                     }
                 ]
             },
             {
                 "year": "2019",
                 "values": [{
-                        "value": 6,
-                        "rate": "Not at all"
+                        "label": "OA",
+                        "value": 42                        
                     },
                     {
-                        "value": 15,
-                        "rate": "Not very much"
+                        "label": "IA",
+                        "value": 23                        
                     },
                     {
-                        "value": 9,
-                        "rate": "Medium"
+                        "label": "FA",
+                        "value": 42                        
+                    },
+                    {                        
+                        "label": "CC",
+                        "value": 23
                     },
                     {
-                        "value": 12,
-                        "rate": "Very much"
-                    },
-                    {
-                        "value": 3,
-                        "rate": "Tremendously"
+                        "label": "EBITDA",
+                        "value": 27
                     }
                 ]
             }
@@ -160,7 +160,7 @@ class NegativeChart extends Component {
         var yAxis = d3.axisLeft(y).ticks(10)
 
         var color = d3.scaleOrdinal()
-            .range(["#ca0020", "#f4a582", "#d5d5d5", "#92c5de", "#0571b0"]);
+            .range(["#bdbbbc", "#63ae2d", "#929292", "#000700", "#de0730"]);
         
         var node = this.node;
         var svg = d3.select(node)
@@ -169,15 +169,15 @@ class NegativeChart extends Component {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var yearsNames = dataset.map(function (d) {
+        var yearsNames = dataset.map(function (d) {            
             return d.year;
         });
-        var rateNames = dataset[0].values.map(function (d) {
-            return d.rate;
+        var labelNames = dataset[0].values.map(function (d) {
+            return d.label;
         });
 
         x0.domain(yearsNames);
-        x1.domain(rateNames).rangeRound([0, x0.bandwidth()]);
+        x1.domain(labelNames).rangeRound([0, x0.bandwidth()]);
         y.domain([0, d3.max(dataset, function (year) {
             return d3.max(year.values, function (d) {
                 return d.value;
@@ -218,10 +218,10 @@ class NegativeChart extends Component {
             .enter().append("rect")
             .attr("width", x1.bandwidth())
             .attr("x", function (d) {
-                return x1(d.rate);
+                return x1(d.label);
             })
             .style("fill", function (d) {
-                return color(d.rate)
+                return color(d.label)
             })
             .attr("y", function (d) {
                 return y(0);
@@ -230,10 +230,10 @@ class NegativeChart extends Component {
                 return height - y(0);
             })
             .on("mouseover", function (d) {
-                d3.select(this).style("fill", d3.rgb(color(d.rate)).darker(2));
+                d3.select(this).style("fill", d3.rgb(color(d.label)).darker(2));
             })
             .on("mouseout", function (d) {
-                d3.select(this).style("fill", color(d.rate));
+                d3.select(this).style("fill", color(d.label));
             });
 
         slice.selectAll("rect")
@@ -252,7 +252,7 @@ class NegativeChart extends Component {
         //Legend
         var legend = svg.selectAll(".legend")
             .data(dataset[0].values.map(function (d) {
-                return d.rate;
+                return d.label;
             }).reverse())
             .enter().append("g")
             .attr("class", "legend")
