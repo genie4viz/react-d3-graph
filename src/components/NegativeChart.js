@@ -27,11 +27,11 @@ class NegativeChart extends Component {
                     },
                     {
                         "label": "FA",
-                        "value": 42                        
+                        "value": -42                        
                     },
                     {                        
                         "label": "CC",
-                        "value": 23
+                        "value": -23
                     },
                     {
                         "label": "EBITDA",
@@ -51,11 +51,11 @@ class NegativeChart extends Component {
                     },
                     {
                         "label": "FA",
-                        "value": 42                        
+                        "value": -42                        
                     },
                     {                        
                         "label": "CC",
-                        "value": 23
+                        "value": -23
                     },
                     {
                         "label": "EBITDA",
@@ -75,11 +75,11 @@ class NegativeChart extends Component {
                     },
                     {
                         "label": "FA",
-                        "value": 42                        
+                        "value": -42                        
                     },
                     {                        
                         "label": "CC",
-                        "value": 23
+                        "value": -23
                     },
                     {
                         "label": "EBITDA",
@@ -99,11 +99,11 @@ class NegativeChart extends Component {
                     },
                     {
                         "label": "FA",
-                        "value": 42                        
+                        "value": -42                        
                     },
                     {                        
                         "label": "CC",
-                        "value": 23
+                        "value": -23
                     },
                     {
                         "label": "EBITDA",
@@ -123,11 +123,11 @@ class NegativeChart extends Component {
                     },
                     {
                         "label": "FA",
-                        "value": 42                        
+                        "value": -42                        
                     },
                     {                        
                         "label": "CC",
-                        "value": 23
+                        "value": -23
                     },
                     {
                         "label": "EBITDA",
@@ -141,26 +141,25 @@ class NegativeChart extends Component {
             height
         } = this.props;
         var margin = {
-                top: 20,
-                right: 20,
-                bottom: 30,
-                left: 40
-            };           
+            top: 20,
+            right: 20,
+            bottom: 30,
+            left: 50
+        };           
 
-        var x0 = d3.scaleBand()
-            .rangeRound([0, width]).padding(0.1);
+        var x = d3.scaleLinear()
+            .range([0, width]);
 
-        var x1 = d3.scaleBand();
+        var y0 = d3.scaleBand()
+            .rangeRound([height, 0]).padding(0.1);
+        var y1 = d3.scaleBand();
 
-        var y = d3.scaleLinear()
-            .range([height, 0]);
+        var xAxis = d3.axisBottom(x).tickSize(height).ticks(10);
 
-        var xAxis = d3.axisBottom(x0).tickSize(0);
-
-        var yAxis = d3.axisLeft(y).ticks(10)
+        var yAxis = d3.axisLeft(y0).tickSize(0)
 
         var color = d3.scaleOrdinal()
-            .range(["#bdbbbc", "#63ae2d", "#929292", "#000700", "#de0730"]);
+            .range(["#bdbbbc", "#63ae2d", "#929292", "#000700"]);
         
         var node = this.node;
         var svg = d3.select(node)
@@ -169,122 +168,143 @@ class NegativeChart extends Component {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var yearsNames = dataset.map(function (d) {            
+        var yearsNames = dataset.map(function (d) {
             return d.year;
         });
-        var labelNames = dataset[0].values.map(function (d) {
+        var labelNames = dataset[0].values.map(function (d) {            
             return d.label;
         });
-
-        x0.domain(yearsNames);
-        x1.domain(labelNames).rangeRound([0, x0.bandwidth()]);
-        y.domain([0, d3.max(dataset, function (year) {
-            return d3.max(year.values, function (d) {
-                return d.value;
-            });
-        })]);
+        
+        //remove EBITDA
+        labelNames = labelNames.slice(0, 4);
+        
+        x.domain([-100, 100]);
+        y0.domain(yearsNames);
+        y1.domain(labelNames).rangeRound([0, y0.bandwidth()]);
 
         svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
+            .attr("transform", "translate(0, 0)")
+            .call(xAxis)            
+            .select(".domain").remove();
+        
+        svg
+            .selectAll(".tick line").attr("stroke", "#777").attr("stroke-dasharray", "2,2")
 
         svg.append("g")
             .attr("class", "y axis")
-            .style('opacity', '0')
-            .call(yAxis)
+            .style('opacity', '1')
+            .call(yAxis)            
+            .select(".domain").remove()
             .append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            .style('font-weight', 'bold')
-            .text("Value");
-
-        svg.select('.y').transition().duration(500).delay(1300).style('opacity', '1');
+            .style('font-weight', 'bold');
 
         var slice = svg.selectAll(".slice")
             .data(dataset)
             .enter().append("g")
             .attr("class", "g")
             .attr("transform", function (d) {
-                return "translate(" + x0(d.year) + ",0)";
+                return "translate(0, " + y0(d.year) + ")";
             });
-
+ 
         slice.selectAll("rect")
-            .data(function (d) {
-                return d.values;
-            })
+            .data(d => d.values)
             .enter().append("rect")
-            .attr("width", x1.bandwidth())
-            .attr("x", function (d) {
-                return x1(d.label);
+            .attr("rx", 5)
+            .attr("ry", 5)
+            .attr("x", function(d){                
+                if(d.value > 0)
+                    return x(0);
+                else
+                    return x(d.value);
+            })
+            .attr("width", function (d) {                
+                if(d.value > 0)
+                    return x(d.value - 100);
+                else
+                    return x(0) - x(d.value);
+            })
+            .attr("height", y1.bandwidth())
+            .attr("y", function (d) {
+                return y1(d.label);
             })
             .style("fill", function (d) {
-                return color(d.label)
+                return color(d.label);                
             })
-            .attr("y", function (d) {
-                return y(0);
+            .style("opacity", function(d){
+                if(d.label === "EBITDA"){
+                    return 0;
+                }else{
+                    return 1;
+                }
             })
-            .attr("height", function (d) {
-                return height - y(0);
-            })
-            .on("mouseover", function (d) {
-                d3.select(this).style("fill", d3.rgb(color(d.label)).darker(2));
-            })
-            .on("mouseout", function (d) {
-                d3.select(this).style("fill", color(d.label));
-            });
+        // //add percent
+        slice.selectAll("text")
+            .data(d => d.values)
+            .enter().append("text")
+            .attr("x", d => d.value > 0 ? x(d.value) + 5 : x(d.value) - 35)
+            .attr("y", d => d.label !== 'EBITDA' ? y1(d.label) + y1.bandwidth() - 4 : 0)
+            .text(d => d.label === "EBITDA" ? '' : d.value + "%")
+            .style("font-size", 12)
+            .style("fill", "#bdbbbc")
 
-        slice.selectAll("rect")
-            .transition()
-            .delay(function (d) {
-                return Math.random() * 1000;
+        // //add EBITDA        
+        slice.selectAll("path")
+            .data(d => d.values)
+            .enter().append("path")
+            .attr("d", function(d){                
+                return "M" + x(d.value) + " -1 L" + x(d.value) + " " + (y1.bandwidth() + 2) +" Z";
             })
-            .duration(1000)
-            .attr("y", function (d) {
-                return y(d.value);
-            })
-            .attr("height", function (d) {
-                return height - y(d.value);
+            .style("stroke","#de0730")
+            .style("stroke-width", 3)
+            .style("opacity", function(d){
+                if(d.label === "EBITDA"){
+                    return 1;
+                }else{
+                    return 0;
+                }
             });
 
         //Legend
-        var legend = svg.selectAll(".legend")
-            .data(dataset[0].values.map(function (d) {
-                return d.label;
-            }).reverse())
-            .enter().append("g")
-            .attr("class", "legend")
-            .attr("transform", function (d, i) {
-                return "translate(0," + i * 20 + ")";
-            })
-            .style("opacity", "0");
+        // var legend = svg.selectAll(".legend")
+        //     .data(dataset[0].values.map(function (d) {
+        //         return d.label;
+        //     }).reverse())
+        //     .enter().append("g")
+        //     .attr("class", "legend")
+        //     .attr("transform", function (d, i) {
+        //         return "translate(0," + i * 20 + ")";
+        //     })
+        //     .style("opacity", "0");
 
-        legend.append("rect")
-            .attr("x", width - 18)
-            .attr("width", 18)
-            .attr("height", 18)
-            .style("fill", function (d) {
-                return color(d);
-            });
+        // legend.append("rect")
+        //     .attr("x", width - 18)
+        //     .attr("width", 18)
+        //     .attr("height", 18)
+        //     .style("fill", function (d) {
+        //         return color(d);
+        //     });
 
-        legend.append("text")
-            .attr("x", width - 24)
-            .attr("y", 9)
-            .attr("dy", ".35em")
-            .style("text-anchor", "end")
-            .text(function (d) {
-                return d;
-            });
+        // legend.append("text")
+        //     .attr("x", width - 24)
+        //     .attr("y", 9)
+        //     .attr("dy", ".35em")
+        //     .style("text-anchor", "end")
+        //     .text(function (d) {
+        //         return d;
+        //     });
 
-        legend.transition().duration(500).delay(function (d, i) {
-            return 1300 + 100 * i;
-        }).style("opacity", "1");
+        // legend.transition().duration(500).delay(function (d, i) {
+        //     return 1300 + 100 * i;
+        // }).style("opacity", "1");
     }
 
     render() {
-        return <svg ref = {node => this.node = node} ></svg>
+        return <svg ref = {node => this.node = node}></svg>
     }
 }
 
