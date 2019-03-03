@@ -4,6 +4,7 @@ import { Button, Section, Box } from 'react-bulma-components';
 import StackChart from './components/StackChart';
 import GuageChart from './components/GuageChart';
 import NegativeChart from './components/NegativeChart';
+import TimeSliderChart from './components/TimeSliderChart';
 import './App.css';
 
 class App extends Component {
@@ -92,6 +93,9 @@ class App extends Component {
           </Box>
           <Box>
             {this.state.data_negative && (<NegativeChart data={this.state.data_negative} width={this.state.width} height={this.state.height} />)}
+          </Box>
+          <Box>
+            <TimeSliderChart />
           </Box>
           <Button onClick={this.handleChange}>Change data</Button>
         </Section>
