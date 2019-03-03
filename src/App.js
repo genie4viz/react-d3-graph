@@ -37,7 +37,33 @@ class App extends Component {
         {
           "year": "2019", 
           "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+        }
+      ],
+      data_timeseries:[
+        {
+          "year": "2014", 
+          "values": [{"label": "Cash", "value": 10},{"label": "Fixed", "value": 50},{"label": "Goodwill", "value": 40},{"label": "Equity", "value": 50},{"label": "Debt","value": 50}]
         },
+        {
+          "year": "2015", 
+          "values": [{"label": "Cash", "value": 20},{"label": "Fixed", "value": 30},{"label": "Goodwill", "value": 50},{"label": "Equity", "value": 40},{"label": "Debt","value": 60}]
+        },
+        {
+          "year": "2016", 
+          "values": [{"label": "Cash", "value": 30},{"label": "Fixed", "value": 40},{"label": "Goodwill", "value": 30},{"label": "Equity", "value": 30},{"label": "Debt","value": 70}]
+        },
+        {
+          "year": "2017", 
+          "values": [{"label": "Cash", "value": 30},{"label": "Fixed", "value": 60},{"label": "Goodwill", "value": 10},{"label": "Equity", "value": 70},{"label": "Debt","value": 30}]
+        },
+        {
+          "year": "2018", 
+          "values": [{"label": "Cash", "value": 60},{"label": "Fixed", "value": 10},{"label": "Goodwill", "value": 30},{"label": "Equity", "value": 60},{"label": "Debt","value": 40}]
+        },
+        {
+          "year": "2019", 
+          "values": [{"label": "Cash", "value": 50},{"label": "Fixed", "value": 20},{"label": "Goodwill", "value": 30},{"label": "Equity", "value": 80},{"label": "Debt","value": 20}]
+        }
       ],
       width: 500,
       height: 400
@@ -74,10 +100,37 @@ class App extends Component {
         "values": [{"label": "OA", "value": 32},{"label": "IA", "value": 67},{"label": "FA", "value": -32},{"label": "CC", "value": -13},{"label": "EBITDA","value": 57}]
       },
     ];
+    let new_data_timeseries = [
+      {
+        "year": "2014", 
+        "values": [{"label": "Cash", "value": 10},{"label": "Fixed", "value": 50},{"label": "Goodwill", "value": 40},{"label": "Equity", "value": 50},{"label": "Debt","value": 50}]
+      },
+      {
+        "year": "2015", 
+        "values": [{"label": "Cash", "value": 20},{"label": "Fixed", "value": 30},{"label": "Goodwill", "value": 50},{"label": "Equity", "value": 40},{"label": "Debt","value": 60}]
+      },
+      {
+        "year": "2016", 
+        "values": [{"label": "Cash", "value": 30},{"label": "Fixed", "value": 40},{"label": "Goodwill", "value": 30},{"label": "Equity", "value": 30},{"label": "Debt","value": 70}]
+      },
+      {
+        "year": "2017", 
+        "values": [{"label": "Cash", "value": 30},{"label": "Fixed", "value": 60},{"label": "Goodwill", "value": 10},{"label": "Equity", "value": 70},{"label": "Debt","value": 30}]
+      },
+      {
+        "year": "2018", 
+        "values": [{"label": "Cash", "value": 60},{"label": "Fixed", "value": 10},{"label": "Goodwill", "value": 30},{"label": "Equity", "value": 60},{"label": "Debt","value": 40}]
+      },
+      {
+        "year": "2019", 
+        "values": [{"label": "Cash", "value": 50},{"label": "Fixed", "value": 20},{"label": "Goodwill", "value": 30},{"label": "Equity", "value": 80},{"label": "Debt","value": 20}]
+      }
+    ];
     this.setState({
       data_stack: new_data_stack,
       data_guage: new_data_guage,
-      data_negative: new_data_negative
+      data_negative: new_data_negative,
+      data_timeseries: new_data_timeseries
     });
   };
  
@@ -95,7 +148,7 @@ class App extends Component {
             {this.state.data_negative && (<NegativeChart data={this.state.data_negative} width={this.state.width} height={this.state.height} />)}
           </Box>
           <Box>
-            <TimeSliderChart />
+          {this.state.data_negative && (<TimeSliderChart data={this.state.data_timeseries} width={this.state.width} height={this.state.height}/>)}
           </Box>
           <Button onClick={this.handleChange}>Change data</Button>
         </Section>

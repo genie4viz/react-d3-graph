@@ -16,7 +16,7 @@ class NegativeChart extends Component {
     }
     drawChart() {        
         const {width, height, data} = this.props;
-        var margin = {top: 20, right: 20, bottom: 30, left: 50};           
+        var margin = {top: 20, right: 20, bottom: 30, left: 50};
 
         var x = d3.scaleLinear()
             .range([0, width]);
