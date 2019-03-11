@@ -28,7 +28,7 @@ class BalanceChart extends Component {
         };
     }    
     componentWillReceiveProps(nextProps){
-        console.log("barchart receive props");        
+        //console.log("barchart receive props");        
         const {width, height} = nextProps;
         let margin = {top: 20, right: 20, bottom: 20, left: 20},
             svgDimen = {width: width - margin.left - margin.right, height: height * 5/6 - margin.bottom - margin.top},
@@ -46,18 +46,18 @@ class BalanceChart extends Component {
             top_legend_height: top_legend_height,
             legend_label_height: legend_label_height 
         });
-        console.log(this.state, "barchart componentwillreceiveprops")
+        //console.log(this.state, "barchart componentwillreceiveprops")
     }
     componentDidMount(){
-        console.log("barchart did mount")
+        //console.log("barchart did mount")
     }   
     shouldComponentUpdate(nextProps, nextState){
-        console.log("barchart should update", this.props.balanceChartData !== nextProps.balanceChartData);        
+        //console.log("barchart should update", this.props.balanceChartData !== nextProps.balanceChartData);        
         return this.props.balanceChartData !== nextProps.balanceChartData;
     }
     
     render() {
-        console.log("barchart render", this.state);
+        //console.log("barchart render", this.state);
 
         const {svgDimen, s_imgW, s_imgH, top_legend_height, legend_label_height, balanceChartData} = this.state;
 
@@ -127,7 +127,7 @@ class Bar extends Component {
         this.drawBar();
     }
     componentWillReceiveProps(nextProps){
-        console.log("bar receive props");        
+        //console.log("bar receive props");        
         const {transX, transY, svgDimen, data} = nextProps;        
         this.setState({
             transX: transX,
@@ -139,7 +139,7 @@ class Bar extends Component {
         });
     }
     drawBar(){
-        console.log(this.state,"bar data")
+        //console.log(this.state,"bar data")
         const {svgDimen, data} = this.state;
         let bar_width = svgDimen.width * 0.25,
             bar_height = svgDimen.height * 0.63,
@@ -187,7 +187,7 @@ class Bar extends Component {
         }       
     }
     render(){
-        console.log("bar render", this.state)
+        //console.log("bar render", this.state)
         const {transX, transY} = this.state;
         return <g className="Bar"  transform={`translate(${transX} , ${transY})`} ref={el => this.el = el}></g>;
                 

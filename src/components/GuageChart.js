@@ -5,36 +5,46 @@ import * as d3 from "d3";
 import './guagechart.scss';
 
 class GuageChart extends Component {
-
+    constructor(props){
+        super(props);
+        const {width, height, data} = this.props;        
+        let margin = {top: 20, right: 20, bottom: 20, left: 20},
+            svgDimen = {width: width - margin.left - margin.right, height: height - margin.top - margin.bottom};
+        this.state = {
+            svgDimen: svgDimen,
+            data: data
+        };
+    }
+    componentWillReceiveProps(nextProps){        
+        const {width, height, data} = nextProps;
+        let margin = {top: 20, right: 20, bottom: 20, left: 20},
+            svgDimen = {width: width - margin.left - margin.right, height: height - margin.top - margin.bottom};
+        this.setState({
+            svgDimen: svgDimen,
+            data: data
+        },function(){
+            this.drawChart();
+        });
+    }
     componentDidMount() {
         this.drawChart();
     }
 
-    componentDidUpdate(){
-        this.drawChart();
-    }
-
     drawChart() {
-        const {width, height, data} = this.props;
-        let margin = 40,
-            n = 100,
-            radius = width / 2 - (margin * 2),
+        const {svgDimen, data} = this.state;
+        let n = 100,
+            padding = {top: 20, right: 20, bottom: 20, left: 20},
+            radius = (svgDimen.height - padding.top - padding.bottom)/2,
             needleRad = radius - (radius * 2 / 5),
-            needleCenterRad = 25,
+            needleCenterRad = radius * 0.15,
             pi = Math.PI,
             halfPi = pi / 2,
             endAngle = pi / 2,
             startAngle = -endAngle,
             field = d3.range(startAngle, endAngle, pi / n),            
-            scale = d3.scaleLinear().domain([0, 100]).range([startAngle, endAngle]),
-            node = this.node;
+            scale = d3.scaleLinear().domain([0, 100]).range([startAngle, endAngle]);            
 
-        d3.select(node).selectAll("*").remove();
-        let svg = d3.select(node)
-                .attr("width", width + margin)
-                .attr("height", height + margin)
-                .append("g")
-                .attr('transform', 'translate(' + width / 2 + ',' + (height / 2) + ')');
+        d3.select(this.el).selectAll("*").remove();
         
         let arc = d3.arc()
             .innerRadius(radius - (radius / 5))
@@ -42,7 +52,7 @@ class GuageChart extends Component {
             .startAngle((d, i) => scale(i))
             .endAngle((d, i) => scale(i + 1));
 
-        svg.append('g')
+        d3.select(this.el).append('g')
             .selectAll('path')
             .data(field)
             .enter()
@@ -52,7 +62,7 @@ class GuageChart extends Component {
             .attr('d', arc);
         
         //draw needle
-        svg
+        d3.select(this.el)
             .append('path')
             .attr('class', 'needle')
             .attr('d', function(d){                
@@ -72,30 +82,9 @@ class GuageChart extends Component {
             })
             .attr('fill', data.color);
 
-        //add percent text
-        svg
-            .append('text')
-            .attr('class', 'text')
-            .attr('text-anchor', 'middle')
-            .attr('x', 0)
-            .attr('y', 130)
-            .attr('class', 'text-main')
-            .attr('fill','#929292')
-            .text(data.current + "%");
-        //add description
-        svg
-            .append('text')
-            .attr('class', 'text')
-            .attr('text-anchor', 'middle')
-            .attr('x', 0)
-            .attr('y', 180)
-            .attr('class', 'text-description')
-            .text(data.description)
-            .attr('fill','#929292');
-
         // add branche, market label
         let ticks = scale.ticks(100);		
-        svg
+        d3.select(this.el)
             .append('g')
             .attr('class', 'label')
             .selectAll('text.label')
@@ -103,9 +92,9 @@ class GuageChart extends Component {
             .enter().append('text')
             .attr('transform', function(d) {
                 let _in = scale(d) - halfPi;
-                let topX = (needleRad + 80) * Math.cos(_in),
-                    topY = (needleRad + 80) * Math.sin(_in);
-                return 'translate(' + (topX - 7) + ',' + topY +')';
+                let topX = (radius + 15) * Math.cos(_in),
+                    topY = (radius + 15) * Math.sin(_in);
+                return 'translate(' + topX + ',' + topY +')';
             })
             .style("text-anchor", d => d < 50 ? "end" : "start")
             .attr('fill','#929292')
@@ -120,7 +109,7 @@ class GuageChart extends Component {
             });
 
         // add marker        
-        svg
+        d3.select(this.el)
             .append('g')
             .attr('class', 'marker')
             .selectAll('path.marker')
@@ -138,17 +127,28 @@ class GuageChart extends Component {
             })
             .attr('d', function(d) {
                 let _in = scale(d) - halfPi;
-                let farX = (needleRad + 75) * Math.cos(_in),
-                    farY = (needleRad + 75) * Math.sin(_in),
-                    nearX = (needleRad + 27) * Math.cos(_in),
-                    nearY = (needleRad + 27) * Math.sin(_in);
+                let farX = (radius + 10) * Math.cos(_in),
+                    farY = (radius + 10) * Math.sin(_in),
+                    nearX = (radius * 4/5 - 10) * Math.cos(_in),
+                    nearY = (radius * 4/5 - 10) * Math.sin(_in);
 
                 return 'M ' + farX + ' ' + farY + ' L ' + nearX + ' ' + nearY + ' Z';
             });
     }
     render() {
-        return  <svg ref={node => this.node = node}>
-                </svg>;
+        const {svgDimen, data} = this.state;
+
+        return  <svg width={svgDimen.width} height={svgDimen.height}>
+                    <g className="guageChart" transform={`translate(${svgDimen.width / 2}, ${svgDimen.height * 0.6 })`} ref={el => this.el = el}></g>
+                    <g className="legendBottom" transform={`translate(${svgDimen.width / 2}, ${svgDimen.height * 7 / 8})`}>
+                        <text x="0" y="0" alignmentBaseline="ideographic" textAnchor="middle" style={{fontSize: 64, fill: '#bdbbbc'}}>
+                            {data.current}%
+                        </text>
+                        <text x="0" y="0" alignmentBaseline="text-before-edge" textAnchor="middle" style={{fontSize: 18, fill: '#bdbbbc'}}>
+                            {data.description}
+                        </text>
+                    </g>
+                </svg>
     }
 }
 
