@@ -15,23 +15,30 @@ class GuageChart extends Component {
             data: data
         };
     }
-    componentWillReceiveProps(nextProps){        
+    componentWillReceiveProps(nextProps){
         const {width, height, data} = nextProps;
         let margin = {top: 20, right: 20, bottom: 20, left: 20},
             svgDimen = {width: width - margin.left - margin.right, height: height - margin.top - margin.bottom};
+        console.log(nextProps, "nextProps");
         this.setState({
             svgDimen: svgDimen,
             data: data
-        },function(){
+        }, function(){
             this.drawChart();
         });
     }
     componentDidMount() {
         this.drawChart();
     }
-
+    shouldComponentUpdate(nextProps, nextState){
+        console.log("shouldcomponent")
+        console.log(nextProps)
+        console.log(this.props)
+        return this.props.data !== nextProps.data;
+    }
     drawChart() {
         const {svgDimen, data} = this.state;
+        console.log(data,"from guagechart receiveprops")
         let n = 100,
             padding = {top: 20, right: 20, bottom: 20, left: 20},
             radius = (svgDimen.height - padding.top - padding.bottom)/2,
