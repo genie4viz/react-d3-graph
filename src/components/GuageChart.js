@@ -4,7 +4,6 @@ import React, {
 import * as d3 from "d3";
 import './guagechart.scss';
 
-
 class GuageChart extends Component {
 
     componentDidMount() {

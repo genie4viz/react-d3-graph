@@ -16,32 +16,32 @@ class NegativeChart extends Component {
     }
     drawChart() {        
         const {width, height, data} = this.props;
-        var margin = {top: 20, right: 20, bottom: 30, left: 50};
+        let margin = {top: 20, right: 20, bottom: 30, left: 50};
 
-        var x = d3.scaleLinear()
+        let x = d3.scaleLinear()
             .range([0, width]);
 
-        var y0 = d3.scaleBand()
+        let y0 = d3.scaleBand()
             .rangeRound([height, 0]).padding(0.1);
-        var y1 = d3.scaleBand();
+        let y1 = d3.scaleBand();
 
-        var xAxis = d3.axisBottom(x).tickSize(height).ticks(10);
+        let xAxis = d3.axisBottom(x).tickSize(height).ticks(10);
 
-        var yAxis = d3.axisLeft(y0).tickSize(0)
+        let yAxis = d3.axisLeft(y0).tickSize(0)
 
-        var color = d3.scaleOrdinal()
+        let color = d3.scaleOrdinal()
             .range(["#bdbbbc", "#63ae2d", "#929292", "#000700"]);
         
-        var node = this.node;
+        let node = this.node;
         d3.select(node).selectAll("*").remove();
-        var svg = d3.select(node)
+        let svg = d3.select(node)
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var yearsNames = data.map(d => d.year);
-        var labelNames = data[0].values.map(d => d.label);
+        let yearsNames = data.map(d => d.year);
+        let labelNames = data[0].values.map(d => d.label);
         
         //remove EBITDA
         labelNames = labelNames.slice(0, 4);
@@ -71,7 +71,7 @@ class NegativeChart extends Component {
             .style("text-anchor", "end")
             .style('font-weight', 'bold');
 
-        var slice = svg.selectAll(".slice")
+        let slice = svg.selectAll(".slice")
             .data(data)
             .enter().append("g")
             .attr("class", "g")
@@ -108,7 +108,7 @@ class NegativeChart extends Component {
             .style("opacity", d => d.label === "EBITDA" ? 1 : 0);
 
         //Legend
-        // var legend = svg.selectAll(".legend")
+        // let legend = svg.selectAll(".legend")
         //     .data(data[0].values.map(function (d) {
         //         return d.label;
         //     }).reverse())

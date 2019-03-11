@@ -1,33 +1,9 @@
-.ticks {
-    font: 10px sans-serif;
-  }
-  
-  .track,
-  .track-inset,
-  .track-overlay {
-    stroke-linecap: round;
-  }
-  
-  .track {
-    stroke: #000;
-    stroke-opacity: 0.3;
-    stroke-width: 10px;
-  }
-  
-  .track-inset {
-    stroke: #ddd;
-    stroke-width: 8px;
-  }
-  
-  .track-overlay {
-    pointer-events: stroke;
-    stroke-width: 50px;
-    stroke: transparent;
-  }
-  
-  .handle {
-    fill: #de0730;
-    stroke: #000;
-    stroke-opacity: 0.5;
-    stroke-width: 1.25px;
-  }
+.rangeBar {
+  stroke: #bdbbbc;
+  stroke-width: 10px;
+  stroke-linecap: round;
+}
+.rangeBarFilled {
+  stroke: #63ae2d;
+  stroke-width: 5px;
+}
