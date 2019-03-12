@@ -93,7 +93,7 @@ class Bars extends Component {
     }
     componentDidMount() {
         this.drawBar();
-    }
+    }    
     componentWillReceiveProps(nextProps){
         const {bar_width, bar_height, data} = nextProps;
         this.setState({
@@ -103,7 +103,7 @@ class Bars extends Component {
         }, function(){
             this.drawBar();
         });
-    }    
+    }
     shouldComponentUpdate(nextProps, nextState){        
         return this.props.data !== nextProps.data;
     }
