@@ -19,7 +19,7 @@ class GuageChart extends Component {
         const {width, height, data} = nextProps;
         let margin = {top: 20, right: 20, bottom: 20, left: 20},
             svgDimen = {width: width - margin.left - margin.right, height: height - margin.top - margin.bottom};
-        console.log(nextProps, "nextProps");
+        // console.log(nextProps, "nextProps");
         this.setState({
             svgDimen: svgDimen,
             data: data

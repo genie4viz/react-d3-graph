@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Button, Section, Box } from 'react-bulma-components';
+import * as d3 from "d3";
+
 import StockChart from './components/StockChart';
 import GuageChart from './components/GuageChart';
 import NegativeChart from './components/NegativeChart';
 import TimeSliderChart from './components/TimeSliderChart';
+import AreaChart from './components/AreaChart';
+
 import './App.css';
+
+import area_data from './components/area_data.csv';
 
 class App extends Component {
   constructor(props){
-    super(props);
+    super(props);    
+    
     this.state = {
       data_stock: [
           {label:"A?", "Satisfied":30, "Not Satisfied":38},
@@ -64,12 +71,22 @@ class App extends Component {
           "year": 2019, 
           "values": [{"label": "Cash", "value": 50},{"label": "Fixed", "value": 20},{"label": "Goodwill", "value": 30},{"label": "Equity", "value": 80},{"label": "Debt","value": 20}]
         }
-      ],
+      ],     
       width: 600,
       height: 400
-    };    
-  };
-  
+    };
+    
+  };  
+  componentDidMount(){
+    
+    //load csv data for area chart
+    let self = this;
+    d3.csv(area_data).then((data) => {      
+      self.setState({
+        data_area: data
+      });      
+    });
+  }
   handleChange = () => {
     let new_data_stock = [
       {label:"BB", "Satisfied":50, "Not Satisfied":48},
@@ -107,7 +124,7 @@ class App extends Component {
       data_negative: new_data_negative      
     });
   };
- 
+  
   render() {    
     return (
       <div className="App">
@@ -123,6 +140,9 @@ class App extends Component {
           </Box>
           <Box>
             {this.state.data_timeseries && (<TimeSliderChart data={this.state.data_timeseries} width={this.state.width} height={this.state.height}/>)}
+          </Box>
+          <Box>
+            {this.state.data_area && (<AreaChart data={this.state.data_area} width={this.state.width} height={this.state.height}/>)}            
           </Box>
           <Button onClick={this.handleChange}>Change data</Button>
         </Section>
