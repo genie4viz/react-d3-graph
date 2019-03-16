@@ -5,144 +5,201 @@ import * as d3 from "d3";
 import svg from 'react-svg'
 import './negativechart.scss';
 
-
-class NegativeChart extends Component {
-
+class BarGroup extends React.Component {
+    constructor(props){
+        super(props);
+        const {data, band, xScale, yScale} = this.props;        
+        this.state = {
+            data: data,
+            band: band,
+            xScale: xScale,
+            yScale: yScale
+        }
+    }
     componentDidMount() {
-        this.drawChart();
+        this.drawBars();
     }
-    componentDidUpdate() {
-        this.drawChart();
+    componentDidUpdate(){
+        this.drawBars();
     }
-    drawChart() {        
-        const {width, height, data} = this.props;
-        let margin = {top: 20, right: 20, bottom: 30, left: 50};
+    componentWillReceiveProps(nextProps){
+        const {data, xScale, yScale} = nextProps;
+        this.setState({
+            data: data,            
+            xScale: xScale,
+            yScale: yScale
+        });
+    }
+    shouldComponentUpdate(nextProps, nextState){        
+        return this.props.data !== nextProps.data;
+    }
+    drawBars(){
+        const {data, xScale, yScale} = this.state;
+        let bar_data = data.values.map((d) => {
+            d.label = d.label;
+            d.value = +d.value;
+            return d;
+        });
 
-        let x = d3.scaleLinear()
-            .range([0, width]);
+        let color = d3.scaleOrdinal().range(["#bdbbbc", "#63ae2d", "#929292", "#000700"]);        
 
-        let y0 = d3.scaleBand()
-            .rangeRound([height, 0]).padding(0.1);
-        let y1 = d3.scaleBand();
-
-        let xAxis = d3.axisBottom(x).tickSize(height).ticks(10);
-
-        let yAxis = d3.axisLeft(y0).tickSize(0)
-
-        let color = d3.scaleOrdinal()
-            .range(["#bdbbbc", "#63ae2d", "#929292", "#000700"]);
-        
-        let node = this.node;
-        d3.select(node).selectAll("*").remove();
-        let svg = d3.select(node)
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        let yearsNames = data.map(d => d.year);
-        let labelNames = data[0].values.map(d => d.label);
-        
-        //remove EBITDA
-        labelNames = labelNames.slice(0, 4);
-        
-        x.domain([-100, 100]);
-        y0.domain(yearsNames);
-        y1.domain(labelNames).rangeRound([0, y0.bandwidth()]);
-
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0, 0)")
-            .call(xAxis)            
-            .select(".domain").remove();
-        
-        svg
-            .selectAll(".tick line").attr("stroke", "#777").attr("stroke-dasharray", "2,2")
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .style('opacity', '1')
-            .call(yAxis)            
-            .select(".domain").remove()
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .style('font-weight', 'bold');
-
-        let slice = svg.selectAll(".slice")
-            .data(data)
-            .enter().append("g")
-            .attr("class", "g")
-            .attr("transform", d => "translate(0, " + y0(d.year) + ")");            
- 
-        slice.selectAll("rect")
-            .data(d => d.values)
+        d3.select(this.el).selectAll("*").remove();
+        d3.select(this.el)
+            .selectAll("rect")
+            .data(bar_data)
             .enter().append("rect")
             .attr("rx", 5)
             .attr("ry", 5)
-            .attr("x", d => d.value > 0 ? x(0) : x(d.value))
-            .attr("width", d => d.value > 0 ? x(d.value - 100) : x(0) - x(d.value))
-            .attr("height", y1.bandwidth())
-            .attr("y", d => y1(d.label))
+            .attr("x", d => d.value > 0 ? xScale(0) : xScale(d.value))
+            .attr("width", d => d.value > 0 ? xScale(d.value - 100) : xScale(0) - xScale(d.value))
+            .attr("height", yScale.bandwidth())
+            .attr("y", d => yScale(d.label))
             .style("fill", d => color(d.label))
             .style("opacity", d => d.label === "EBITDA" ? 0 : 1);
         // //add percent
-        slice.selectAll("text")
-            .data(d => d.values)
+        d3.select(this.el)
+            .selectAll("text")
+            .data(bar_data)
             .enter().append("text")
-            .attr("x", d => d.value > 0 ? x(d.value) + 5 : x(d.value) - 35)
-            .attr("y", d => d.label !== 'EBITDA' ? y1(d.label) + y1.bandwidth() - 4 : 0)
+            .attr("x", d => d.value > 0 ? xScale(d.value): xScale(d.value))
+            .attr("y", d => d.label !== 'EBITDA' ? yScale(d.label) + yScale.bandwidth()/2 : 0)
             .text(d => d.label === "EBITDA" ? '' : d.value + "%")
+            .attr('text-anchor', d => d.value > 0 ? 'end' : 'start')
+            .attr('alignment-baseline', 'central')
             .style("font-size", 12)
-            .style("fill", "#bdbbbc")
+            .style("fill", "white")
 
-        // //add EBITDA        
-        slice.selectAll("path")
-            .data(d => d.values)
+        // // //add EBITDA        
+        d3.select(this.el)
+            .selectAll("path")
+            .data(bar_data)
             .enter().append("path")
-            .attr("d", d => "M" + x(d.value) + " -1 L" + x(d.value) + " " + (y1.bandwidth() + 2) +" Z")
+            .attr("d", d => "M" + xScale(d.value) + " -1 L" + xScale(d.value) + " " + (yScale.bandwidth() + 2) +" Z")
             .style("stroke","#de0730")
             .style("stroke-width", 3)
             .style("opacity", d => d.label === "EBITDA" ? 1 : 0);
-
-        //Legend
-        // let legend = svg.selectAll(".legend")
-        //     .data(data[0].values.map(function (d) {
-        //         return d.label;
-        //     }).reverse())
-        //     .enter().append("g")
-        //     .attr("class", "legend")
-        //     .attr("transform", function (d, i) {
-        //         return "translate(0," + i * 20 + ")";
-        //     })
-        //     .style("opacity", "0");
-
-        // legend.append("rect")
-        //     .attr("x", width - 18)
-        //     .attr("width", 18)
-        //     .attr("height", 18)
-        //     .style("fill", function (d) {
-        //         return color(d);
-        //     });
-
-        // legend.append("text")
-        //     .attr("x", width - 24)
-        //     .attr("y", 9)
-        //     .attr("dy", ".35em")
-        //     .style("text-anchor", "end")
-        //     .text(function (d) {
-        //         return d;
-        //     });
-
-        // legend.transition().duration(500).delay(function (d, i) {
-        //     return 1300 + 100 * i;
-        // }).style("opacity", "1");
     }
+    render(){        
+        return <g ref={el => this.el = el} />;
+    }
+}
+class Axis extends React.Component {
+    constructor(props){
+        super(props);        
+        const {svgDimen, margins, data} = this.props;
+        let xScale = d3.scaleLinear().range([0, svgDimen.width - margins.left - margins.right]).domain([-100, 100]);
+        
+        let y0Scale = d3.scaleBand()
+            .rangeRound([svgDimen.height - margins.bottom, 0]).padding(0.01)
+            .domain(data.map(d => d.year));
+        let y1Scale = d3.scaleBand()
+            .domain(data[0].values.slice(0 ,4).map(d => d.label))
+            .rangeRound([0, y0Scale.bandwidth()]);
+        
+        this.state = {
+            svgDimen: svgDimen,
+            margins: margins,
+            xScale: xScale,
+            y0Scale: y0Scale,
+            y1Scale: y1Scale,
+            data: data
+        };
+    }
+    componentDidMount(){
+      this.renderAxis();
+    }
+    componentWillReceiveProps(nextProps){
+        const {svgDimen, margins, data} = nextProps;        
+        let xScale = d3.scaleLinear().range([0, svgDimen.width - margins.left - margins.right]).domain([-100, 100]);
+        
+        let y0Scale = d3.scaleBand()
+            .rangeRound([svgDimen.height - margins.bottom, 0]).padding(0.01)
+            .domain(data.map(d => d.year));
+        let y1Scale = d3.scaleBand()
+            .domain(data[0].values.slice(0 ,4).map(d => d.label))
+            .rangeRound([0, y0Scale.bandwidth()]);      
+        this.setState({
+            svgDimen: svgDimen,
+            margins: margins,
+            xScale: xScale,
+            y0Scale: y0Scale,
+            y1Scale: y1Scale,
+            data: data
+        });
+    }
+    componentDidUpdate(){
+        this.renderAxis();
+    }
+    renderAxis(){
+        const {xScale, y0Scale, svgDimen, margins} = this.state;
+        let xAxis = d3.axisBottom(xScale).tickSize(svgDimen.height - margins.bottom).ticks(10);
+        let yAxis = d3.axisLeft(y0Scale).tickSize(0);
 
+        d3.select(this.xAxisElement).selectAll("*").remove();
+        d3.select(this.yAxisElement).selectAll("*").remove();
+
+        d3.select(this.xAxisElement)
+            .attr("class", "x axis")
+            .call(xAxis)
+            .select(".domain").remove();
+
+        d3.select(this.xAxisElement)
+            .selectAll(".tick line").attr("stroke", "#777").attr("stroke-dasharray", "2,2")
+
+        d3.select(this.yAxisElement)
+            .attr("class", "y axis")
+            .call(yAxis)
+            .select(".domain").remove();
+
+        d3.select(this.yAxisElement)
+            .append('text')
+            .attr('x', 0)
+            .attr('y', 0)
+            .style("text-anchor", "middle")
+            .style('fill', 'black')            
+    }
     render() {
-        return <svg ref = {node => this.node = node}></svg>
+        const {data, xScale, y0Scale, y1Scale} = this.state;        
+        return (
+            <g className="Axis">
+                <g className="xAxis" transform={`translate(50,0)`} ref={el => this.xAxisElement = el } />                    
+                <g className="yAxis" transform={`translate(40,0)`} ref={el => this.yAxisElement = el } />
+                {data.map((d, i) => {
+                    return  <g key={i} className={`bar-group${d.year}`} transform={`translate(50, ${y0Scale(d.year)})`}>
+                                <BarGroup key={i} data={d} yScale={y1Scale} xScale={xScale}/>
+                            </g>;
+                })}
+            </g>
+        )
+    }
+}
+class NegativeChart extends Component {
+    constructor(props){
+        super(props);
+        const {width, height, data} = this.props;
+        let margins = {top: 20, right: 20, bottom: 20, left: 60},
+            svgDimen = {width: width - margins.left - margins.right, height: height - margins.top - margins.bottom};
+        this.state = {
+            margins: margins,
+            svgDimen: svgDimen,
+            data: data
+        };
+    }
+    componentWillReceiveProps(nextProps){
+        const {width, height, data} = nextProps;
+        let margins = {top: 20, right: 20, bottom: 20, left: 60},
+            svgDimen = {width: width - margins.left - margins.right, height: height - margins.top - margins.bottom};
+        this.setState({
+            data: nextProps.data,
+            margins: margins,
+            svgDimen: svgDimen
+        });
+    }
+    render() {
+        const {svgDimen, margins, data} = this.state;
+        return  <svg className="graphSvg" width={svgDimen.width} height={svgDimen.height}>
+                    <Axis svgDimen={svgDimen} margins={margins} data={data}/>
+                </svg>
     }
 }
 

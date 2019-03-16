@@ -16,7 +16,7 @@ class Chart extends Component {
         }
     }
     componentWillReceiveProps(nextProps){
-        console.log(nextProps,"chart")
+        // console.log(nextProps,"chart")
         this.setState({
             svgDimen: nextProps.svgDimen,
             partial: nextProps.partial,
@@ -34,7 +34,7 @@ class Chart extends Component {
     }
     drawGraph(){
         const {svgDimen, margins, partial, columns} = this.state;        
-        console.log(partial,"chart")
+        // console.log(partial,"chart")
         if(partial.columns === undefined) partial.columns = columns;
 
         let data = partial.columns.slice(1, 3).map(function(id){

@@ -24,7 +24,10 @@ class Axis extends React.Component {
         };
     }
     componentDidMount(){
-      this.renderAxis();
+        this.renderAxis();
+    }
+    componentDidUpdate(){
+        this.renderAxis();
     }
     componentWillReceiveProps(nextProps){
         const {svgDimen, top_margin, bottom_margin, data} = nextProps;        
@@ -39,8 +42,6 @@ class Axis extends React.Component {
             x: x,
             y: y,
             data: data
-        }, function(){
-            this.renderAxis();
         });
     }
     renderAxis(){
@@ -93,6 +94,9 @@ class Bars extends Component {
     }
     componentDidMount() {
         this.drawBar();
+    }
+    componentDidUpdate(){
+        this.drawBar();
     }    
     componentWillReceiveProps(nextProps){
         const {bar_width, bar_height, data} = nextProps;
@@ -100,8 +104,6 @@ class Bars extends Component {
             bar_height: bar_height,
             bar_width: bar_width,
             data: data
-        }, function(){
-            this.drawBar();
         });
     }
     shouldComponentUpdate(nextProps, nextState){        
@@ -158,7 +160,7 @@ class Bars extends Component {
             .append("text")
             .attr('x', r_bar_width/2 + 10)
             .attr('y', -data["Satisfied"] * rate)
-            .attr('alignment-baseline', 'middle')
+            .attr('alignment-baseline', 'central')
             .attr('text-anchor', 'start')
             .style('font-size', 20)
             .style('fill', '#bdbbbc')

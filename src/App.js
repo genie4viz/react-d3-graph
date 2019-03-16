@@ -27,23 +27,23 @@ class App extends Component {
       data_negative:[
         {
           "year": "2015", 
-          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -33},{"label": "EBITDA","value": 37}]
         },
         {
           "year": "2016", 
-          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+          "values": [{"label": "OA", "value": 100},{"label": "IA", "value": 23},{"label": "FA", "value": -100},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
         },
         {
           "year": "2017", 
-          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -43},{"label": "EBITDA","value": 37}]
         },
         {
           "year": "2018", 
-          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -53},{"label": "EBITDA","value": 37}]
         },
         {
           "year": "2019", 
-          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -23},{"label": "EBITDA","value": 37}]
+          "values": [{"label": "OA", "value": 42},{"label": "IA", "value": 23},{"label": "FA", "value": -42},{"label": "CC", "value": -13},{"label": "EBITDA","value": 37}]
         }
       ],
       data_timeseries:[
