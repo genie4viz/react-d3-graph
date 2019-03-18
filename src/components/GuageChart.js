@@ -2,7 +2,7 @@ import React, {
     Component
 } from 'react';
 import * as d3 from "d3";
-import './guagechart.scss';
+
 
 class GuageChart extends Component {
     constructor(props){
@@ -146,10 +146,10 @@ class GuageChart extends Component {
         return  <svg width={svgDimen.width} height={svgDimen.height}>
                     <g className="guageChart" transform={`translate(${svgDimen.width / 2}, ${svgDimen.height * 0.6 })`} ref={el => this.el = el}></g>
                     <g className="legendBottom" transform={`translate(${svgDimen.width / 2}, ${svgDimen.height * 7 / 8})`}>
-                        <text x="0" y="0" alignmentBaseline="ideographic" textAnchor="middle" style={{fontSize: 64, fill: '#bdbbbc'}}>
+                        <text x="0" y="0" alignmentBaseline="baseline" textAnchor="middle" style={{fontSize: 64, fill: '#bdbbbc'}}>
                             {data.current}%
                         </text>
-                        <text x="0" y="0" alignmentBaseline="text-before-edge" textAnchor="middle" style={{fontSize: 18, fill: '#bdbbbc'}}>
+                        <text x="0" y="10" alignmentBaseline="hanging" textAnchor="middle" style={{fontSize: 18, fill: '#bdbbbc'}}>
                             {data.description}
                         </text>
                     </g>

@@ -2,8 +2,7 @@ import React, {
     Component
 } from 'react';
 import * as d3 from "d3";
-import svg from 'react-svg'
-import './stockchart.scss';
+
 
 class Axis extends React.Component {
     constructor(props){
@@ -53,7 +52,9 @@ class Axis extends React.Component {
         d3.select(this.yAxisElement).selectAll("*").remove();
         d3.select(this.xAxisElement)
             .attr("class", "x axis")
-            .call(xAxis);
+            .call(xAxis)
+            .selectAll("text")
+            .style("font-size", 16)
 
         d3.select(this.yAxisElement)
             .attr("class", "y axis")
@@ -62,7 +63,7 @@ class Axis extends React.Component {
             .append('text')
             .attr('x', -20)
             .attr('y', -10)
-            .style("text-anchor", "middle")
+            .style("text-anchor", "central")
             .style('fill', 'black')
             .text("%");
     }

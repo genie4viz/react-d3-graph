@@ -2,8 +2,7 @@ import React, {
     Component
 } from 'react';
 import * as d3 from "d3";
-import svg from 'react-svg'
-import './areachart.scss';
+
 
 class Chart extends Component {
     constructor(props){

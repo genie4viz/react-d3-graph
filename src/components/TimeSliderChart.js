@@ -2,8 +2,6 @@ import React, {
     Component
 } from 'react';
 import * as d3 from "d3";
-import svg from 'react-svg'
-import './timesliderchart.scss';
 import balance_img from './balance.png';
 
 class BalanceChart extends Component {
@@ -149,7 +147,7 @@ class Bar extends Component {
                     }
                     return data[i].value * rate/2 + sh;
                 })
-                .attr('alignment-baseline', 'middle')
+                .attr('alignment-baseline', 'central')
                 .style("fill","white")
                 .style("opacity", function(){
                     if(data[i].value === 0){
@@ -173,22 +171,32 @@ class Bar extends Component {
 class Handle extends Component {
     constructor(props){
         super(props);
+        const {margins, years, svgDimen, initialValue} = this.props;
         this.state = {
-            svgDimen: null,
-            years: [],
-            margins: null,
-            onChangeYear: null,
-            initialValue: 0,
-            handle: ''
+            svgDimen: svgDimen,
+            years: years,
+            margins: margins,            
+            initialValue: initialValue            
         }
+
     }
     onMouseOver(){
         this.setState({
             handle: this.props.handle            
         });        
     }
+    componentWillReceiveProps(nextProps){
+        const {initialValue, years, margins, svgDimen} = nextProps;
+        this.setState({
+            initialValue: initialValue,
+            years: years,
+            margins: margins,
+            svgDimen: svgDimen
+        })
+    }
     render() {        
-        const {margins, years, svgDimen, handle, initialValue} = this.state;
+        const {margins, years, svgDimen, initialValue} = this.state;
+        const {handle} = this.props;
         let first = years[0];
         let last = years[years.length - 1];
         let xScale = d3.scaleLinear()
@@ -200,23 +208,10 @@ class Handle extends Component {
         const text = <text style={{opacity: 1, fontSize: 14, fill: '#de0730'}}/>;
         return <g className={handle} transform={`translate(${xScale(initialValue)},20)`}
             onMouseOver={this.onMouseOver.bind(this)}>{text}{circle}</g>
-    }
-    static getDerivedStateFromProps(nextProps, prevState) {        
-        const {margins, svgDimen, years, handle, initialValue, onChangeYear} = nextProps;        
-        let newProps = {
-            years: years,            
-            margins: margins,
-            svgDimen: svgDimen,
-            onChangeYear: onChangeYear,
-            initialValue: initialValue,
-            handle: handle
-        }
-        if(prevState !== newProps)
-            return newProps; //set newProps to state
-        return null;// no changes
-    }
+    }    
     componentDidUpdate(){        
-        const {margins, years, svgDimen, onChangeYear, handle} = this.state;
+        const {margins, years, svgDimen} = this.state;
+        const {onChangeYear, handle} = this.props;
         let first = years[0];
         let last = years[years.length - 1];
         let xScale = d3.scaleLinear()
@@ -264,10 +259,11 @@ class Handle extends Component {
 class Axis extends React.Component {
     constructor(props){
         super(props);
+        const {margins, svgDimen, years} = this.props;
         this.state = {
-            margins: null,
-            svgDimen: null,
-            years: []
+            margins: margins,
+            svgDimen: svgDimen,
+            years: years
         }
     }
     componentDidMount(){
@@ -276,16 +272,13 @@ class Axis extends React.Component {
     componentDidUpdate(){
         this.renderAxis();
     }
-    static getDerivedStateFromProps(nextProps, prevState) {        
-        const {margins, svgDimen, years} = nextProps;        
-        let newProps = {
-            years: years,            
+    componentWillReceiveProps(nextProps){
+        const {svgDimen, margins, years} = nextProps;
+        this.setState({
+            svgDimen: svgDimen,
             margins: margins,
-            svgDimen: svgDimen
-        }
-        if(prevState !== newProps)
-            return newProps; //set newProps to state
-        return null;// no changes
+            years: years
+        });
     }
     renderAxis(){        
         const {svgDimen, margins, years} = this.state;
@@ -310,7 +303,7 @@ class Axis extends React.Component {
         d3.select(this.axisElement).selectAll("line").attr("stroke","white");//set black when shows axis
         d3.select(this.axisElement).select("path").style("d","none")
     }
-    render() {        
+    render() {
         return <g className="sliderAxis" transform="translate(0,30)" ref={el => this.axisElement = el } />;
     }
 }
@@ -318,30 +311,33 @@ class RangeSlider extends Component {
     constructor(props){
         super(props);
         this.state = {
-            width: 0,
-            height: 0,
-            years: []
+            width: this.props.width,
+            height: this.props.height,
+            years: this.props.years
         }
     }
-    static getDerivedStateFromProps(nextProps, prevState) {        
-        const {years, width, height, onChangeYear} = nextProps;        
-        let newProps = {
-            years: years,            
+    componentWillReceiveProps(nextProps){
+        const {width, height, years} = nextProps;
+        this.setState({
             width: width,
             height: height,
-            onChangeYear: onChangeYear,
-        }
-        if(prevState !== newProps)
-            return newProps; //set newProps to state
-        return null;// no changes
-    }    
+            years: years
+        });
+    }
+    componentDidUpdate(){
+    
+    }
+    componentDidMount(){
+
+    }     
     render(){
-        const {width, height, years, onChangeYear} = this.state;
+        const {width, height, years} = this.state;
+        const {onChangeYear} = this.props;
         const margins = {top: 20, right: 50, bottom: 20, left: 50},
             svgDimen = {width: width - margins.left - margins.right, height: height/6 };        
         
-        const RangeBar = <line x1={margins.left} y1="20" x2={svgDimen.width - margins.right} y2="20" className="rangeBar" />;
-        let first = years[0];        
+        const RangeBar = <rect rx="5" ry="5" x={margins.left} y="15" width={svgDimen.width - margins.right - margins.left} height="10" className="rangeBar" fill="grey"/>;
+        let first = years[0];
 
         return  <svg className="rangeSliderSvg" width={svgDimen.width} height={svgDimen.height}>
                     <g className="rangeSliderGroup" transform={`translate(0,${svgDimen.height - margins.bottom - 40})`}>

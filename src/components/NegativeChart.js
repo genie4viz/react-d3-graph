@@ -2,8 +2,7 @@ import React, {
     Component
 } from 'react';
 import * as d3 from "d3";
-import svg from 'react-svg'
-import './negativechart.scss';
+
 
 class BarGroup extends React.Component {
     constructor(props){
